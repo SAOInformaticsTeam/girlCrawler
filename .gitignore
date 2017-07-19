@@ -1,1 +1,3 @@
-/girls/
+node_modules
+girls
+*.log
