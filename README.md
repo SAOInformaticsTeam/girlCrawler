@@ -19,14 +19,18 @@
 
 		>git clone https://github.com/xuelangcxy/girlCrawler.git
 3. 安装依赖文件
-使用 yarn 安装(推荐使用):
+* 使用 yarn 安装(推荐使用):
+
 |   |   >yarn
-或者使用 npm 安装：
+* 或者使用 npm 安装：
+
 |   |   >npm install
 4. 在工程的根目录下启动主文件
-直接运行 script (推荐使用):
+* 直接运行 script (推荐使用):
+
 |   |   >yarn start
-或者：
+* 或者：
+
 |   |   >npm start
 
 ### 尚存在的问题
