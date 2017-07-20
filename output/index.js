@@ -35946,7 +35946,8 @@ var download = function download(url, cb) {
     res.on('end', function () {
       cb(data);
     });
-  }).on('error', function () {
+  }).on('error', function (err) {
+    console.log('error during download: ', err);
     cb(null);
   });
 };
@@ -35961,6 +35962,7 @@ var storeImgToLocal = function storeImgToLocal(picArr, title) {
   picArr.forEach(function (elem, i) {
     var name = elem.name,
         url = elem.url;
+    //const picFullPath = path.join('./girls', title, name);
 
     var picFullPath = './girls/' + title + '/' + name;
     if (!_fs2.default.existsSync(picFullPath)) {
@@ -35976,11 +35978,11 @@ var storeImgToLocal = function storeImgToLocal(picArr, title) {
             if (err) {
               throw err;
             }
-            console.log(++num + ':Download ' + name + 'success!');
+            console.log(++num + ':Download ' + name + ' success!');
           });
         });
-      }).on('error', function () {
-        console.log('error');
+      }).on('error', function (err) {
+        console.log('error during storeImgToLocal: ', err);
       });
     }
   });
@@ -35995,8 +35997,8 @@ var getImgUrl = function getImgUrl(urlList, cb) {
   urlList.forEach(function (element, index) {
     var url = element.url,
         title = element.title;
+    //console.log(url + ' : ' + index);
 
-    console.log(url + ' : ' + index);
     picArr[index] = [];
 
     var path = _config.rootPath + title + '/';
@@ -36006,7 +36008,7 @@ var getImgUrl = function getImgUrl(urlList, cb) {
         var $ = _cheerio2.default.load(data);
         $('.entry-content img').each(function (i, e) {
           var picUrl = $(e).attr('src');
-          var picName = $(e).slice(picUrl.lastIndexOf('/') + 1);
+          var picName = picUrl.slice(picUrl.lastIndexOf('/') + 1);
           var picTitle = $(e).attr('alt');
           picArr[index].push({
             url: picUrl,
@@ -36035,7 +36037,7 @@ var getUrlList = function getUrlList(cb) {
         var listUrl = $(e).attr('href');
         var urlTitle = $(e).text();
         urlList.push({
-          url: urlList,
+          url: listUrl,
           title: urlTitle
         });
       });

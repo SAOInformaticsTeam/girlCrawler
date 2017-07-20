@@ -10,6 +10,7 @@ import http from 'http';
 import cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
+import logger from './logger';
 
 import { baseUrl, rootPath } from './config.js';
 
@@ -35,7 +36,8 @@ const download = (url, cb) => {
     res.on('end', () => {
       cb(data);
     });
-  }).on('error', () => {
+  }).on('error', (err) => {
+    console.log('error during download: ', err);
     cb(null);
   });
 };
@@ -49,7 +51,8 @@ const storeImgToLocal = (picArr, title) => {
   let num = 0;
   picArr.forEach((elem, i) => {
     const { name, url } = elem;
-    const picFullPath = path.join('./girls', title, name);
+    //const picFullPath = path.join('./girls', title, name);
+		const picFullPath = './girls/' + title + '/' + name;
     if (!fs.existsSync(picFullPath)) {
       console.log(i + ':' + url);
       http.get(url, (res) => {
@@ -63,11 +66,11 @@ const storeImgToLocal = (picArr, title) => {
             if (err) {
               throw err;
             }
-            console.log(++num + ':Download ' + name + 'success!');
+            console.log('\x1b[33m%s\x1b[0m: ', ++num + ':Download ' + name + ' success!');
           })
         })
-      }).on('error', () => {
-        console.log('error');
+      }).on('error', (err) => {
+        console.error('error during storeImgToLocal: ', err);
       })
     }
   })
@@ -81,7 +84,6 @@ const storeImgToLocal = (picArr, title) => {
 const getImgUrl = (urlList, cb) => {
   urlList.forEach((element, index) => {
     const { url, title } = element;
-    console.log(url + ' : ' + index);
     picArr[index] = [];
 
     const path = rootPath + title + '/';
@@ -91,7 +93,7 @@ const getImgUrl = (urlList, cb) => {
         const $ = cheerio.load(data);
         $('.entry-content img').each((i, e) => {
           const picUrl = $(e).attr('src');
-          const picName = $(e).slice(picUrl.lastIndexOf('/') + 1);
+          const picName = picUrl.slice(picUrl.lastIndexOf('/') + 1);
           const picTitle = $(e).attr('alt');
           picArr[index].push({
             url: picUrl,
@@ -101,7 +103,7 @@ const getImgUrl = (urlList, cb) => {
         })
         storeImgToLocal(picArr[index], title);
       } else {
-        console.log('getImgUrl failed!');
+        console.error('getImgUrl failed!');
       }
     })
   })
@@ -117,18 +119,16 @@ const getUrlList = (cb) => {
     if (data) {
       const $ = cheerio.load(data);
       $("#tagcloud-cc a").each((i, e) => {
-        console.log(e);
         const listUrl = $(e).attr('href');
         const urlTitle = $(e).text();
         urlList.push({
-          url: urlList,
+          url: listUrl,
           title: urlTitle,
         });
       })
-      console.log('urlList: ', urlList);
       cb(urlList);
     } else {
-      console.log('Download interupted!');
+      console.error('Download interupted!');
     }
   })
 }

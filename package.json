@@ -1,10 +1,11 @@
 {
   "name": "girlCrawler",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A crawler for pictures on http://www.girl13.com",
   "main": "girl.js",
   "scripts": {
     "start": "babel-node ./main.js",
+    "begin": "webpack && node ./output/index.js",
     "lint": "eslint . --fix && echo 'Eslint Passed\\n'",
     "test": "eslint . --fix && echo 'Eslint Passed\\n'"
   },
