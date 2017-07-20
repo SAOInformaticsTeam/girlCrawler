@@ -1,6 +1,6 @@
 {
   "name": "girlCrawler",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A crawler for pictures on http://www.girl13.com",
   "main": "girl.js",
   "scripts": {
